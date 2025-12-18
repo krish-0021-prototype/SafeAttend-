@@ -2,56 +2,37 @@ import { calculateRiskLevel, calculatePrediction } from '@/lib/attendanceUtils';
 import type { Student, Branch, Division, Year } from '@/lib/types';
 
 // Data from the user's diagram, now consolidated under one branch
-const studentsData: { name: string; division: Division, branch: Branch, year: Year }[] = [
+const studentsData: { name: string; division: Division, branch: Branch, year: Year, attended: number, total: number }[] = [
   // Division K - Automation & Robotics
-  { name: 'Aditya', division: 'K', branch: 'Automation & Robotics', year: 1 },
-  { name: 'Prachi', division: 'K', branch: 'Automation & Robotics', year: 2 },
-  { name: 'Atul', division: 'K', branch: 'Automation & Robotics', year: 3 },
-  { name: 'Gauri', division: 'K', branch: 'Automation & Robotics', year: 4 },
-  { name: 'Purva', division: 'K', branch: 'Automation & Robotics', year: 1 },
+  { name: 'Aditya', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 85, total: 95 },
+  { name: 'Prachi', division: 'K', branch: 'Automation & Robotics', year: 2, attended: 90, total: 100 },
+  { name: 'Atul', division: 'K', branch: 'Automation & Robotics', year: 3, attended: 72, total: 90 },
+  { name: 'Gauri', division: 'K', branch: 'Automation & Robotics', year: 4, attended: 65, total: 100 },
+  { name: 'Purva', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 88, total: 92 },
 
   // Division P - Automation & Robotics
-  { name: 'Kanishk', division: 'P', branch: 'Automation & Robotics', year: 2 },
-  { name: 'OM', division: 'P', branch: 'Automation & Robotics', year: 3 },
-  { name: 'Yogesh', division: 'P', branch: 'Automation & Robotics', year: 4 },
-  { name: 'Kunal', division: 'P', branch: 'Automation & Robotics', year: 1 },
-  { name: 'Srushti', division: 'P', branch: 'Automation & Robotics', year: 2 },
+  { name: 'Kanishk', division: 'P', branch: 'Automation & Robotics', year: 2, attended: 81, total: 98 },
+  { name: 'OM', division: 'P', branch: 'Automation & Robotics', year: 3, attended: 75, total: 85 },
+  { name: 'Yogesh', division: 'P', branch: 'Automation & Robotics', year: 4, attended: 95, total: 100 },
+  { name: 'Kunal', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 68, total: 95 },
+  { name: 'Srushti', division: 'P', branch: 'Automation & Robotics', year: 2, attended: 89, total: 90 },
 
   // Division J - AI/ML
-  { name: 'Riya', division: 'J', branch: 'AI/ML', year: 1 },
-  { name: 'Maheey', division: 'J', branch: 'AI/ML', year: 2 },
-  { name: 'Shravni', division: 'J', branch: 'AI/ML', year: 3 },
-  { name: 'Shatakshi', division: 'J', branch: 'AI/ML', year: 4 },
+  { name: 'Riya', division: 'J', branch: 'AI/ML', year: 1, attended: 92, total: 94 },
+  { name: 'Maheey', division: 'J', branch: 'AI/ML', year: 2, attended: 78, total: 88 },
+  { name: 'Shravni', division: 'J', branch: 'AI/ML', year: 3, attended: 83, total: 99 },
+  { name: 'Shatakshi', division: 'J', branch: 'AI/ML', year: 4, attended: 60, total: 90 },
 
   // Division H - ENTC
-  { name: 'Shreya', division: 'H', branch: 'ENTC', year: 1 },
-  { name: 'Soham', division: 'H', branch: 'ENTC', year: 2 },
-  { name: 'Ronit', division: 'H', branch: 'ENTC', year: 3 },
+  { name: 'Shreya', division: 'H', branch: 'ENTC', year: 1, attended: 45, total: 100 },
+  { name: 'Soham', division: 'H', branch: 'ENTC', year: 2, attended: 80, total: 85 },
+  { name: 'Ronit', division: 'H', branch: 'ENTC', year: 3, attended: 71, total: 100 },
 ];
-
-
-// Function to generate somewhat realistic attendance data
-function generateAttendance() {
-  const total = Math.floor(Math.random() * 20) + 80; // Total lectures between 80 and 100
-  const attended = Math.floor(Math.random() * (total - 55)) + 55; // Attendance between 55 and total
-  return { attended, total };
-}
 
 
 export async function getMockStudents(): Promise<Student[]> {
   const students: Student[] = studentsData.map((s, index) => {
-    let attended: number, total: number;
-
-    if (s.name === 'Shreya') {
-        attended = 45;
-        total = 100;
-    } else {
-        const generated = generateAttendance();
-        attended = generated.attended;
-        total = generated.total;
-    }
-    
-    const overallAttendance = total > 0 ? (attended / total) * 100 : 0;
+    const overallAttendance = s.total > 0 ? (s.attended / s.total) * 100 : 0;
     const riskLevel = calculateRiskLevel(overallAttendance);
     
     const student: Student = {
@@ -63,12 +44,12 @@ export async function getMockStudents(): Promise<Student[]> {
       division: s.division,
       overallAttendance: overallAttendance,
       riskLevel: riskLevel,
-      missableLectures: calculatePrediction(attended, total),
+      missableLectures: calculatePrediction(s.attended, s.total),
       aiAdvice: `This is a static placeholder for AI-generated advice for ${s.name}.`,
       subjects: [{
         subjectName: 'Data Structures', // Example subject
-        totalLectures: total,
-        attendedLectures: attended,
+        totalLectures: s.total,
+        attendedLectures: s.attended,
         percentage: overallAttendance
       }]
     };
