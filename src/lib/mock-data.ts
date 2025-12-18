@@ -40,7 +40,17 @@ function generateAttendance() {
 
 export async function getMockStudents(): Promise<Student[]> {
   const students: Student[] = studentsData.map((s, index) => {
-    const { attended, total } = generateAttendance();
+    let attended: number, total: number;
+
+    if (s.name === 'Shreya') {
+        attended = 45;
+        total = 100;
+    } else {
+        const generated = generateAttendance();
+        attended = generated.attended;
+        total = generated.total;
+    }
+    
     const overallAttendance = total > 0 ? (attended / total) * 100 : 0;
     const riskLevel = calculateRiskLevel(overallAttendance);
     
