@@ -1,21 +1,21 @@
 import { calculateRiskLevel, calculatePrediction } from '@/lib/attendanceUtils';
 import type { Student, Branch, Division, Year } from '@/lib/types';
 
-// Data from the user's diagram
+// Data from the user's diagram, now consolidated under one branch
 const studentsData: { name: string; division: Division, branch: Branch, year: Year }[] = [
-  // Division K - Let's assign them to different branches/years for variety
-  { name: 'Aditya', division: 'K', branch: 'AI/ML', year: 1 },
-  { name: 'Prachi', division: 'K', branch: 'AIDS', year: 2 },
+  // Division K
+  { name: 'Aditya', division: 'K', branch: 'Automation & Robotics', year: 1 },
+  { name: 'Prachi', division: 'K', branch: 'Automation & Robotics', year: 2 },
   { name: 'Atul', division: 'K', branch: 'Automation & Robotics', year: 3 },
-  { name: 'Gauri', division: 'K', branch: 'AI/ML', year: 4 },
-  { name: 'Purva', division: 'K', branch: 'AIDS', year: 1 },
+  { name: 'Gauri', division: 'K', branch: 'Automation & Robotics', year: 4 },
+  { name: 'Purva', division: 'K', branch: 'Automation & Robotics', year: 1 },
 
   // Division P
   { name: 'Kanishk', division: 'P', branch: 'Automation & Robotics', year: 2 },
-  { name: 'OM', division: 'P', branch: 'AI/ML', year: 3 },
-  { name: 'Yogesh', division: 'P', branch: 'AIDS', year: 4 },
+  { name: 'OM', division: 'P', branch: 'Automation & Robotics', year: 3 },
+  { name: 'Yogesh', division: 'P', branch: 'Automation & Robotics', year: 4 },
   { name: 'Kunal', division: 'P', branch: 'Automation & Robotics', year: 1 },
-  { name: 'Srushti', division: 'P', branch: 'AI/ML', year: 2 },
+  { name: 'Srushti', division: 'P', branch: 'Automation & Robotics', year: 2 },
 ];
 
 
@@ -58,9 +58,9 @@ export async function getMockStudents(): Promise<Student[]> {
 }
 
 export async function getFilterOptions() {
-    const years = [...new Set(studentsData.map(s => s.year))];
-    const branches = [...new Set(studentsData.map(s => s.branch))];
-    const divisions = [...new Set(studentsData.map(s => s.division))];
+    const years: Year[] = [1, 2, 3, 4];
+    const branches: Branch[] = ["AI/ML", "AIDS", "Automation & Robotics"];
+    const divisions: Division[] = ["K", "P"];
     return {
         years: years.sort(),
         branches: branches.sort(),
