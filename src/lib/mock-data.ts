@@ -16,13 +16,6 @@ const studentsData: { name: string; division: Division, branch: Branch, year: Ye
   { name: 'Yogesh', division: 'P', branch: 'AIDS', year: 4 },
   { name: 'Kunal', division: 'P', branch: 'Automation & Robotics', year: 1 },
   { name: 'Srushti', division: 'P', branch: 'AI/ML', year: 2 },
-  
-  // Adding back the original students with new properties for more data
-  { name: 'Alex Johnson', division: 'K', branch: 'AI/ML', year: 1 },
-  { name: 'Brenda Smith', division: 'P', branch: 'AIDS', year: 2 },
-  { name: 'Charlie Brown', division: 'K', branch: 'Automation & Robotics', year: 3 },
-  { name: 'Diana Prince', division: 'P', branch: 'AI/ML', year: 4 },
-  { name: 'Ethan Hunt', division: 'K', branch: 'AIDS', year: 1 },
 ];
 
 
