@@ -1,13 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import type { Student } from '@/lib/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BrainCircuit } from 'lucide-react';
 import { AttendanceProgressBar } from './AttendanceProgressBar';
-import { AiInsightModal } from './AiInsightModal';
 import { cn } from '@/lib/utils';
 
 interface StudentTableProps {
@@ -15,14 +11,6 @@ interface StudentTableProps {
 }
 
 export function StudentTable({ students }: StudentTableProps) {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-
-  const handleInsightClick = (student: Student) => {
-    setSelectedStudent(student);
-    setModalOpen(true);
-  };
-
   const getRiskBadgeVariant = (riskLevel: Student['riskLevel']) => {
     switch (riskLevel) {
       case 'Safe':
@@ -46,7 +34,6 @@ export function StudentTable({ students }: StudentTableProps) {
               <TableHead className="font-semibold">Overall Attendance</TableHead>
               <TableHead className="font-semibold">Risk Level</TableHead>
               <TableHead className="font-semibold">Prediction</TableHead>
-              <TableHead className="text-right font-semibold">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -73,25 +60,11 @@ export function StudentTable({ students }: StudentTableProps) {
                   </Badge>
                 </TableCell>
                 <TableCell>{student.missableLectures}</TableCell>
-                <TableCell className="text-right">
-                  <Button variant="ghost" size="sm" onClick={() => handleInsightClick(student)}>
-                    <BrainCircuit className="mr-2 h-4 w-4" />
-                    AI Insight
-                  </Button>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-      {selectedStudent && (
-        <AiInsightModal
-          isOpen={modalOpen}
-          onOpenChange={setModalOpen}
-          studentName={selectedStudent.name}
-          advice={selectedStudent.aiAdvice}
-        />
-      )}
     </>
   );
 }
