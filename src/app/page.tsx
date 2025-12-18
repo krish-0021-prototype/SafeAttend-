@@ -1,4 +1,3 @@
-import { Shield } from 'lucide-react';
 import { getMockStudents, getFilterOptions } from '@/lib/mock-data';
 import { StudentTable } from '@/components/dashboard/StudentTable';
 import { Suspense } from 'react';
@@ -6,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 import { StudentFilters } from '@/components/dashboard/StudentFilters';
 import type { Branch, Division, Year } from '@/lib/types';
+import { Logo } from '@/components/dashboard/Logo';
 
 
 export default async function Home({
@@ -34,10 +34,7 @@ export default async function Home({
     <div className="min-h-screen bg-background font-body text-foreground">
       <main className="container mx-auto p-4 md:p-8">
         <header className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Shield className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold font-headline">AttendSafe AI</h1>
-          </div>
+          <Logo />
         </header>
 
         <section className="mb-8">
