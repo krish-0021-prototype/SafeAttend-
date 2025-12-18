@@ -1,5 +1,4 @@
-import { getPersonalizedAttendanceAdvice } from '@/ai/flows/personalized-attendance-advice';
-import { calculateRiskLevel, calculatePrediction, getMissableLecturesForAI } from '@/lib/attendanceUtils';
+import { calculateRiskLevel, calculatePrediction } from '@/lib/attendanceUtils';
 import type { Student } from '@/lib/types';
 
 // Raw data to be processed
@@ -12,17 +11,10 @@ const studentsData = [
 ];
 
 export async function getMockStudents(): Promise<Student[]> {
-  const studentPromises = studentsData.map(async (s) => {
+  const students: Student[] = studentsData.map((s) => {
     const overallAttendance = s.total > 0 ? (s.attended / s.total) * 100 : 0;
     const riskLevel = calculateRiskLevel(overallAttendance);
     
-    const aiResponse = await getPersonalizedAttendanceAdvice({
-        name: s.name,
-        overallAttendance: parseFloat(overallAttendance.toFixed(1)),
-        riskLevel: riskLevel,
-        missableLectures: getMissableLecturesForAI(s.attended, s.total)
-    });
-
     const student: Student = {
       id: s.id,
       name: s.name,
@@ -30,7 +22,8 @@ export async function getMockStudents(): Promise<Student[]> {
       overallAttendance: overallAttendance,
       riskLevel: riskLevel,
       missableLectures: calculatePrediction(s.attended, s.total),
-      aiAdvice: aiResponse.aiAdvice,
+      // Using static advice to avoid rate-limiting on demo.
+      aiAdvice: `This is a static placeholder for AI-generated advice for ${s.name}. The actual advice would be dynamically generated based on their attendance record.`,
       subjects: [{
         subjectName: 'Data Structures',
         totalLectures: s.total,
@@ -41,5 +34,5 @@ export async function getMockStudents(): Promise<Student[]> {
     return student;
   });
 
-  return Promise.all(studentPromises);
+  return Promise.resolve(students);
 }
