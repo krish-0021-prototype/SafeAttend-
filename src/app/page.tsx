@@ -1,4 +1,4 @@
-import { Shield, Users, AlertTriangle } from 'lucide-react';
+import { Shield, Users, AlertTriangle, Search } from 'lucide-react';
 import { getMockStudents, getFilterOptions } from '@/lib/mock-data';
 import { SummaryCard } from '@/components/dashboard/SummaryCard';
 import { StudentTable } from '@/components/dashboard/StudentTable';
@@ -20,13 +20,15 @@ export default async function Home({
   const selectedYear = searchParams.year ? parseInt(searchParams.year as string) as Year : undefined;
   const selectedBranch = searchParams.branch as Branch | undefined;
   const selectedDivision = searchParams.division as Division | undefined;
+  const searchQuery = (searchParams.search as string) || '';
 
   const filteredStudents = allStudents.filter(student => {
-    return (
-      (!selectedYear || student.year === selectedYear) &&
-      (!selectedBranch || student.branch === selectedBranch) &&
-      (!selectedDivision || student.division === selectedDivision)
-    );
+    const searchMatch = student.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const yearMatch = !selectedYear || student.year === selectedYear;
+    const branchMatch = !selectedBranch || student.branch === selectedBranch;
+    const divisionMatch = !selectedDivision || student.division === selectedDivision;
+    
+    return searchMatch && yearMatch && branchMatch && divisionMatch;
   });
 
   const totalStudents = filteredStudents.length;
@@ -55,7 +57,12 @@ export default async function Home({
         <section className="mb-8">
             <StudentFilters 
                 options={filterOptions}
-                currentFilters={{ year: selectedYear, branch: selectedBranch, division: selectedDivision }}
+                currentFilters={{ 
+                    year: selectedYear, 
+                    branch: selectedBranch, 
+                    division: selectedDivision,
+                    search: searchQuery
+                }}
             />
         </section>
 
