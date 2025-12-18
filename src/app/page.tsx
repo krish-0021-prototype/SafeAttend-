@@ -1,6 +1,5 @@
-import { Shield, Users, AlertTriangle, Search } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { getMockStudents, getFilterOptions } from '@/lib/mock-data';
-import { SummaryCard } from '@/components/dashboard/SummaryCard';
 import { StudentTable } from '@/components/dashboard/StudentTable';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -31,9 +30,6 @@ export default async function Home({
     return searchMatch && yearMatch && branchMatch && divisionMatch;
   });
 
-  const totalStudents = filteredStudents.length;
-  const criticalRisks = filteredStudents.filter(s => s.riskLevel === 'Critical').length;
-
   return (
     <div className="min-h-screen bg-background font-body text-foreground">
       <main className="container mx-auto p-4 md:p-8">
@@ -43,16 +39,6 @@ export default async function Home({
             <h1 className="text-3xl font-bold font-headline">AttendSafe AI</h1>
           </div>
         </header>
-
-        <section className="grid gap-4 md:grid-cols-2 mb-8">
-          <SummaryCard title="Total Students" value={totalStudents} icon={Users} />
-          <SummaryCard 
-            title="Critical Risks" 
-            value={criticalRisks} 
-            icon={AlertTriangle} 
-            className={criticalRisks > 0 ? "[&_svg]:text-destructive text-destructive" : ""}
-          />
-        </section>
 
         <section className="mb-8">
             <StudentFilters 
