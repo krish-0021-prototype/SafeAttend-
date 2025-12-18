@@ -11,7 +11,6 @@ export default async function Home() {
 
   const totalStudents = students.length;
   const criticalRisks = students.filter(s => s.riskLevel === 'Critical').length;
-  const avgAttendance = students.length > 0 ? students.reduce((acc, s) => acc + s.overallAttendance, 0) / totalStudents : 0;
 
   return (
     <div className="min-h-screen bg-background font-body text-foreground">
@@ -23,7 +22,7 @@ export default async function Home() {
           </div>
         </header>
 
-        <section className="grid gap-4 md:grid-cols-3 mb-8">
+        <section className="grid gap-4 md:grid-cols-2 mb-8">
           <SummaryCard title="Total Students" value={totalStudents} icon={Users} />
           <SummaryCard 
             title="Critical Risks" 
@@ -31,7 +30,6 @@ export default async function Home() {
             icon={AlertTriangle} 
             className={criticalRisks > 0 ? "[&_svg]:text-destructive text-destructive" : ""}
           />
-          <SummaryCard title="Average Attendance" value={`${avgAttendance.toFixed(1)}%`} icon={Activity} />
         </section>
 
         <section>
