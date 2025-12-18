@@ -8,8 +8,8 @@ export interface Subject {
 export type RiskLevel = "Safe" | "Warning" | "Critical";
 
 export type Year = 1 | 2 | 3 | 4;
-export type Branch = "AI/ML" | "AIDS" | "Automation & Robotics";
-export type Division = "K" | "P" | "J";
+export type Branch = "AI/ML" | "AIDS" | "Automation & Robotics" | "ENTC";
+export type Division = "K" | "P" | "J" | "H";
 
 export interface Student {
   id: string;

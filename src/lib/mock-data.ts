@@ -22,6 +22,11 @@ const studentsData: { name: string; division: Division, branch: Branch, year: Ye
   { name: 'Maheey', division: 'J', branch: 'AI/ML', year: 2 },
   { name: 'Shravni', division: 'J', branch: 'AI/ML', year: 3 },
   { name: 'Shatakshi', division: 'J', branch: 'AI/ML', year: 4 },
+
+  // Division H - ENTC
+  { name: 'Shreya', division: 'H', branch: 'ENTC', year: 1 },
+  { name: 'Soham', division: 'H', branch: 'ENTC', year: 2 },
+  { name: 'Ronit', division: 'H', branch: 'ENTC', year: 3 },
 ];
 
 
@@ -65,8 +70,8 @@ export async function getMockStudents(): Promise<Student[]> {
 
 export async function getFilterOptions() {
     const years: Year[] = [1, 2, 3, 4];
-    const branches: Branch[] = ["AI/ML", "AIDS", "Automation & Robotics"];
-    const divisions: Division[] = ["K", "P", "J"];
+    const branches: Branch[] = ["AI/ML", "AIDS", "Automation & Robotics", "ENTC"];
+    const divisions: Division[] = ["K", "P", "J", "H"];
     return {
         years: years.sort(),
         branches: branches.sort(),
