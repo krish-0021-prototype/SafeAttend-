@@ -28,7 +28,7 @@ export function StudentFilters({ options, currentFilters }: StudentFiltersProps)
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (value) {
+      if (value && value !== 'all') {
         params.set(name, value);
       } else {
         params.delete(name);
@@ -52,36 +52,36 @@ export function StudentFilters({ options, currentFilters }: StudentFiltersProps)
     <Card className="p-4">
       <div className="flex flex-wrap items-center gap-4">
         <h3 className="text-lg font-semibold">Filters</h3>
-        <Select onValueChange={(value) => handleFilterChange('year', value)} value={currentFilters.year?.toString() ?? ''}>
+        <Select onValueChange={(value) => handleFilterChange('year', value)} value={currentFilters.year?.toString() ?? 'all'}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select Year" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Years</SelectItem>
+            <SelectItem value="all">All Years</SelectItem>
             {options.years.map(year => (
               <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
             ))}
           </SelectContent>
         </Select>
 
-        <Select onValueChange={(value) => handleFilterChange('branch', value)} value={currentFilters.branch ?? ''}>
+        <Select onValueChange={(value) => handleFilterChange('branch', value)} value={currentFilters.branch ?? 'all'}>
           <SelectTrigger className="w-[240px]">
             <SelectValue placeholder="Select Branch" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Branches</SelectItem>
+            <SelectItem value="all">All Branches</SelectItem>
             {options.branches.map(branch => (
               <SelectItem key={branch} value={branch}>{branch}</SelectItem>
             ))}
           </SelectContent>
         </Select>
 
-        <Select onValueChange={(value) => handleFilterChange('division', value)} value={currentFilters.division ?? ''}>
+        <Select onValueChange={(value) => handleFilterChange('division', value)} value={currentFilters.division ?? 'all'}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select Division" />
           </SelectTrigger>
           <SelectContent>
-             <SelectItem value="">All Divisions</SelectItem>
+             <SelectItem value="all">All Divisions</SelectItem>
             {options.divisions.map(division => (
               <SelectItem key={division} value={division}>{division}</SelectItem>
             ))}
