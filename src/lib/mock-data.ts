@@ -3,19 +3,25 @@ import type { Student, Branch, Division, Year } from '@/lib/types';
 
 // Data from the user's diagram, now consolidated under one branch
 const studentsData: { name: string; division: Division, branch: Branch, year: Year }[] = [
-  // Division K
+  // Division K - Automation & Robotics
   { name: 'Aditya', division: 'K', branch: 'Automation & Robotics', year: 1 },
   { name: 'Prachi', division: 'K', branch: 'Automation & Robotics', year: 2 },
   { name: 'Atul', division: 'K', branch: 'Automation & Robotics', year: 3 },
   { name: 'Gauri', division: 'K', branch: 'Automation & Robotics', year: 4 },
   { name: 'Purva', division: 'K', branch: 'Automation & Robotics', year: 1 },
 
-  // Division P
+  // Division P - Automation & Robotics
   { name: 'Kanishk', division: 'P', branch: 'Automation & Robotics', year: 2 },
   { name: 'OM', division: 'P', branch: 'Automation & Robotics', year: 3 },
   { name: 'Yogesh', division: 'P', branch: 'Automation & Robotics', year: 4 },
   { name: 'Kunal', division: 'P', branch: 'Automation & Robotics', year: 1 },
   { name: 'Srushti', division: 'P', branch: 'Automation & Robotics', year: 2 },
+
+  // Division J - AI/ML
+  { name: 'Riya', division: 'J', branch: 'AI/ML', year: 1 },
+  { name: 'Maheey', division: 'J', branch: 'AI/ML', year: 2 },
+  { name: 'Shravni', division: 'J', branch: 'AI/ML', year: 3 },
+  { name: 'Shatakshi', division: 'J', branch: 'AI/ML', year: 4 },
 ];
 
 
@@ -60,7 +66,7 @@ export async function getMockStudents(): Promise<Student[]> {
 export async function getFilterOptions() {
     const years: Year[] = [1, 2, 3, 4];
     const branches: Branch[] = ["AI/ML", "AIDS", "Automation & Robotics"];
-    const divisions: Division[] = ["K", "P"];
+    const divisions: Division[] = ["K", "P", "J"];
     return {
         years: years.sort(),
         branches: branches.sort(),
