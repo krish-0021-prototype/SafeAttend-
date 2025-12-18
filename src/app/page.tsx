@@ -1,16 +1,36 @@
-import { Shield, Users, AlertTriangle, Activity } from 'lucide-react';
-import { getMockStudents } from '@/lib/mock-data';
+import { Shield, Users, AlertTriangle } from 'lucide-react';
+import { getMockStudents, getFilterOptions } from '@/lib/mock-data';
 import { SummaryCard } from '@/components/dashboard/SummaryCard';
 import { StudentTable } from '@/components/dashboard/StudentTable';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
+import { StudentFilters } from '@/components/dashboard/StudentFilters';
+import type { Branch, Division, Year } from '@/lib/types';
 
-export default async function Home() {
-  const students = await getMockStudents();
 
-  const totalStudents = students.length;
-  const criticalRisks = students.filter(s => s.riskLevel === 'Critical').length;
+export default async function Home({
+  searchParams
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const allStudents = await getMockStudents();
+  const filterOptions = await getFilterOptions();
+
+  const selectedYear = searchParams.year ? parseInt(searchParams.year as string) as Year : undefined;
+  const selectedBranch = searchParams.branch as Branch | undefined;
+  const selectedDivision = searchParams.division as Division | undefined;
+
+  const filteredStudents = allStudents.filter(student => {
+    return (
+      (!selectedYear || student.year === selectedYear) &&
+      (!selectedBranch || student.branch === selectedBranch) &&
+      (!selectedDivision || student.division === selectedDivision)
+    );
+  });
+
+  const totalStudents = filteredStudents.length;
+  const criticalRisks = filteredStudents.filter(s => s.riskLevel === 'Critical').length;
 
   return (
     <div className="min-h-screen bg-background font-body text-foreground">
@@ -32,21 +52,22 @@ export default async function Home() {
           />
         </section>
 
+        <section className="mb-8">
+            <StudentFilters 
+                options={filterOptions}
+                currentFilters={{ year: selectedYear, branch: selectedBranch, division: selectedDivision }}
+            />
+        </section>
+
         <section>
           <h2 className="text-2xl font-bold mb-4">Student Overview</h2>
             <Suspense fallback={<StudentTableSkeleton />}>
-              <StudentTableLoader />
+              <StudentTable students={filteredStudents} />
             </Suspense>
         </section>
       </main>
     </div>
   );
-}
-
-// Separate async component to fetch data and pass to client component
-async function StudentTableLoader() {
-    const students = await getMockStudents();
-    return <StudentTable students={students} />;
 }
 
 

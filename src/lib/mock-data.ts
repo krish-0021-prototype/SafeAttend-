@@ -1,33 +1,60 @@
 import { calculateRiskLevel, calculatePrediction } from '@/lib/attendanceUtils';
-import type { Student } from '@/lib/types';
+import type { Student, Branch, Division, Year } from '@/lib/types';
 
-// Raw data to be processed
-const studentsData = [
-  { id: '1', name: 'Alex Johnson', rollNumber: 'STU001', attended: 90, total: 100 }, // Safe (90%)
-  { id: '2', name: 'Brenda Smith', rollNumber: 'STU002', attended: 76, total: 100 }, // Warning (76%)
-  { id: '3', name: 'Charlie Brown', rollNumber: 'STU003', attended: 60, total: 100 }, // Critical (60%)
-  { id: '4', name: 'Diana Prince', rollNumber: 'STU004', attended: 46, total: 50 },  // Safe (92%)
-  { id: '5', name: 'Ethan Hunt', rollNumber: 'STU005', attended: 70, total: 95 },   // Critical (73.6%)
+// Data from the user's diagram
+const studentsData: { name: string; division: Division, branch: Branch, year: Year }[] = [
+  // Division K - Let's assign them to different branches/years for variety
+  { name: 'Aditya', division: 'K', branch: 'AI/ML', year: 1 },
+  { name: 'Prachi', division: 'K', branch: 'AIDS', year: 2 },
+  { name: 'Atul', division: 'K', branch: 'Automation & Robotics', year: 3 },
+  { name: 'Gauri', division: 'K', branch: 'AI/ML', year: 4 },
+  { name: 'Purva', division: 'K', branch: 'AIDS', year: 1 },
+
+  // Division P
+  { name: 'Kanishk', division: 'P', branch: 'Automation & Robotics', year: 2 },
+  { name: 'OM', division: 'P', branch: 'AI/ML', year: 3 },
+  { name: 'Yogesh', division: 'P', branch: 'AIDS', year: 4 },
+  { name: 'Kunal', division: 'P', branch: 'Automation & Robotics', year: 1 },
+  { name: 'Srushti', division: 'P', branch: 'AI/ML', year: 2 },
+  
+  // Adding back the original students with new properties for more data
+  { name: 'Alex Johnson', division: 'K', branch: 'AI/ML', year: 1 },
+  { name: 'Brenda Smith', division: 'P', branch: 'AIDS', year: 2 },
+  { name: 'Charlie Brown', division: 'K', branch: 'Automation & Robotics', year: 3 },
+  { name: 'Diana Prince', division: 'P', branch: 'AI/ML', year: 4 },
+  { name: 'Ethan Hunt', division: 'K', branch: 'AIDS', year: 1 },
 ];
 
+
+// Function to generate somewhat realistic attendance data
+function generateAttendance() {
+  const total = Math.floor(Math.random() * 20) + 80; // Total lectures between 80 and 100
+  const attended = Math.floor(Math.random() * (total - 55)) + 55; // Attendance between 55 and total
+  return { attended, total };
+}
+
+
 export async function getMockStudents(): Promise<Student[]> {
-  const students: Student[] = studentsData.map((s) => {
-    const overallAttendance = s.total > 0 ? (s.attended / s.total) * 100 : 0;
+  const students: Student[] = studentsData.map((s, index) => {
+    const { attended, total } = generateAttendance();
+    const overallAttendance = total > 0 ? (attended / total) * 100 : 0;
     const riskLevel = calculateRiskLevel(overallAttendance);
     
     const student: Student = {
-      id: s.id,
+      id: (index + 1).toString(),
       name: s.name,
-      rollNumber: s.rollNumber,
+      rollNumber: `STU${(index + 1).toString().padStart(3, '0')}`,
+      year: s.year,
+      branch: s.branch,
+      division: s.division,
       overallAttendance: overallAttendance,
       riskLevel: riskLevel,
-      missableLectures: calculatePrediction(s.attended, s.total),
-      // Using static advice to avoid rate-limiting on demo.
-      aiAdvice: `This is a static placeholder for AI-generated advice for ${s.name}. The actual advice would be dynamically generated based on their attendance record.`,
+      missableLectures: calculatePrediction(attended, total),
+      aiAdvice: `This is a static placeholder for AI-generated advice for ${s.name}.`,
       subjects: [{
-        subjectName: 'Data Structures',
-        totalLectures: s.total,
-        attendedLectures: s.attended,
+        subjectName: 'Data Structures', // Example subject
+        totalLectures: total,
+        attendedLectures: attended,
         percentage: overallAttendance
       }]
     };
@@ -35,4 +62,15 @@ export async function getMockStudents(): Promise<Student[]> {
   });
 
   return Promise.resolve(students);
+}
+
+export async function getFilterOptions() {
+    const years = [...new Set(studentsData.map(s => s.year))];
+    const branches = [...new Set(studentsData.map(s => s.branch))];
+    const divisions = [...new Set(studentsData.map(s => s.division))];
+    return {
+        years: years.sort(),
+        branches: branches.sort(),
+        divisions: divisions.sort()
+    }
 }

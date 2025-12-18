@@ -7,10 +7,17 @@ export interface Subject {
 
 export type RiskLevel = "Safe" | "Warning" | "Critical";
 
+export type Year = 1 | 2 | 3 | 4;
+export type Branch = "AI/ML" | "AIDS" | "Automation & Robotics";
+export type Division = "K" | "P";
+
 export interface Student {
   id: string;
   name: string;
   rollNumber: string;
+  year: Year;
+  branch: Branch;
+  division: Division;
   subjects: Subject[];
   overallAttendance: number;
   riskLevel: RiskLevel;
