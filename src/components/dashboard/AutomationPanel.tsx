@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -9,6 +8,7 @@ import { generateNotification } from '@/ai/flows/generate-notification';
 import type { Student } from '@/lib/types';
 import { BellRing, CheckCircle, AlertTriangle } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { calculateRequiredLectures } from '@/lib/attendanceUtils';
 
 interface AutomationPanelProps {
   studentsToNotify: Student[];
@@ -32,11 +32,13 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
 
     for (const student of studentsToNotify) {
       try {
+        const { attendedLectures, totalLectures } = student.subjects[0] || { attendedLectures: 0, totalLectures: 0 };
+        const requiredLectures = calculateRequiredLectures(attendedLectures, totalLectures);
         const result = await generateNotification({
           name: student.name,
           overallAttendance: student.overallAttendance,
           riskLevel: student.riskLevel,
-          missableLectures: student.missableLectures,
+          requiredLectures,
         });
         results.push(`✔️ Sent to ${student.name}: "${result.message}"`);
       } catch (error) {

@@ -22,6 +22,4 @@ export interface Student {
   overallAttendance: number;
   riskLevel: RiskLevel;
   aiAdvice: string;
-  // This is the string for the 'Prediction' column in the UI
-  missableLectures: string; 
 }

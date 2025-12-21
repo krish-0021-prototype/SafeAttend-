@@ -1,4 +1,4 @@
-import { calculateRiskLevel, calculatePrediction } from '@/lib/attendanceUtils';
+import { calculateRiskLevel } from '@/lib/attendanceUtils';
 import type { Student, Branch, Division, Year } from '@/lib/types';
 
 // Data from the user's diagram, now consolidated under one branch
@@ -44,7 +44,6 @@ export async function getMockStudents(): Promise<Student[]> {
       division: s.division,
       overallAttendance: overallAttendance,
       riskLevel: riskLevel,
-      missableLectures: calculatePrediction(s.attended, s.total),
       aiAdvice: `This is a static placeholder for AI-generated advice for ${s.name}.`,
       subjects: [{
         subjectName: 'Data Structures', // Example subject

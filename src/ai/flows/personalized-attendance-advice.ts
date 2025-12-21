@@ -24,11 +24,6 @@ const PersonalizedAttendanceAdviceInputSchema = z.object({
     .describe(
       'The risk level of the student (Safe, Warning, or Critical) based on their attendance.'
     ),
-  missableLectures: z
-    .string()
-    .describe(
-      'The number of lectures the student can miss without falling below the threshold.'
-    ),
 });
 export type PersonalizedAttendanceAdviceInput = z.infer<
   typeof PersonalizedAttendanceAdviceInputSchema
@@ -56,12 +51,11 @@ const personalizedAttendanceAdvicePrompt = ai.definePrompt({
   Student Name: {{name}}
   Overall Attendance: {{overallAttendance}}%
   Risk Level: {{riskLevel}}
-  Missable Lectures: {{missableLectures}}
 
-  Provide personalized advice to the student, addressing their current risk level and suggesting actions to improve their attendance. Tailor the advice based on whether they are in the Safe, Warning, or Critical zone. If they are in a good position encourage them and offer the amount of lectures they can miss.
-  If they are in danger, make sure you provide the amount of lectures to attend to avoid detention.
-  Example for Safe: \"Great job! You are in the Green Zone. You can comfortably miss 2 lectures this week.\"
-  Example for Critical: \"Alert! You are in the Red Zone. You must attend the next 6 lectures consecutively to avoid detention.\"
+  Provide personalized advice to the student, addressing their current risk level and suggesting actions to improve their attendance. Tailor the advice based on whether they are in the Safe, Warning, or Critical zone. If they are in a good position encourage them.
+  If they are in danger, provide actionable advice.
+  Example for Safe: "Great job, {{name}}! Your attendance is in the Safe zone. Keep up the good work!"
+  Example for Critical: "Alert, {{name}}! Your attendance is in the Critical zone. You need to attend all upcoming lectures to avoid serious academic consequences. Please speak with your advisor immediately to create a plan."
   Remember to be encouraging and supportive. Format the output as a single paragraph.
   `, 
 });

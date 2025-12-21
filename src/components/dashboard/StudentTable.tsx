@@ -10,6 +10,7 @@ import { Info, BellRing, CheckCircle, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { generateNotification } from '@/ai/flows/generate-notification';
+import { calculateRequiredLectures } from '@/lib/attendanceUtils';
 
 interface StudentTableProps {
   students: Student[];
@@ -31,11 +32,13 @@ export function StudentTable({ students }: StudentTableProps) {
 
     setNotifying(student.id);
     try {
+      const { attendedLectures, totalLectures } = student.subjects[0] || { attendedLectures: 0, totalLectures: 0 };
+      const requiredLectures = calculateRequiredLectures(attendedLectures, totalLectures);
       const notification = await generateNotification({
         name: student.name,
         overallAttendance: student.overallAttendance,
         riskLevel: student.riskLevel,
-        missableLectures: student.missableLectures,
+        requiredLectures,
       });
 
       console.log('Generated Notification:', notification.message);
@@ -82,7 +85,6 @@ export function StudentTable({ students }: StudentTableProps) {
               <TableHead className="font-semibold">Division</TableHead>
               <TableHead className="font-semibold">Overall Attendance</TableHead>
               <TableHead className="font-semibold">Risk Level</TableHead>
-              <TableHead className="font-semibold">Prediction</TableHead>
               <TableHead className="text-right font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -114,7 +116,6 @@ export function StudentTable({ students }: StudentTableProps) {
                       {student.riskLevel}
                     </Badge>
                   </TableCell>
-                  <TableCell>{student.missableLectures}</TableCell>
                   <TableCell className="text-right">
                     {(student.riskLevel === 'Critical' || student.riskLevel === 'Warning') && (
                        <Button 
@@ -132,7 +133,7 @@ export function StudentTable({ students }: StudentTableProps) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
+                <TableCell colSpan={7} className="h-24 text-center">
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <Info className="h-8 w-8" />
                     <p>No students found for the selected filters.</p>
