@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { generateNotification } from '@/ai/flows/generate-notification';
 import type { Student } from '@/lib/types';
-import { BellRing, CheckCircle, AlertTriangle } from 'lucide-react';
+import { BellRing, CheckCircle, AlertTriangle, Mail } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { calculateRequiredLectures } from '@/lib/attendanceUtils';
+import { sendEmail } from '@/app/actions';
 
 interface AutomationPanelProps {
   studentsToNotify: Student[];
@@ -25,7 +26,7 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
 
     toast({
       title: 'Automation Started',
-      description: `Sending notifications to ${studentsToNotify.length} students...`,
+      description: `Sending email notifications to ${studentsToNotify.length} students...`,
     });
 
     const results: string[] = [];
@@ -34,19 +35,30 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
       try {
         const { attendedLectures, totalLectures } = student.subjects[0] || { attendedLectures: 0, totalLectures: 0 };
         const requiredLectures = calculateRequiredLectures(attendedLectures, totalLectures);
+        
+        // 1. Generate the personalized notification message using AI.
         const result = await generateNotification({
           name: student.name,
           overallAttendance: student.overallAttendance,
           riskLevel: student.riskLevel,
           requiredLectures,
         });
+        
+        // 2. Send the email using our server action.
+        const emailResult = await sendEmail({
+          to: student.email,
+          subject: `Attendance Alert: ${student.riskLevel}`,
+          body: result.message,
+        });
 
-        // This is a simulation. In a real app, you'd send an email/SMS here.
-        console.log(`Simulating notification for ${student.name} (${student.email}): ${result.message}`);
+        if (emailResult.success) {
+          results.push(`✔️ Email sent to ${student.name} (${student.email}).`);
+        } else {
+          results.push(`❌ Failed to send email to ${student.name}: ${emailResult.message}`);
+        }
 
-        results.push(`✔️ Notification for ${student.name} (${student.email}) prepared: "${result.message}"`);
       } catch (error) {
-        console.error(`Failed to notify ${student.name}:`, error);
+        console.error(`Failed to process notification for ${student.name}:`, error);
         results.push(`❌ Failed to prepare notification for ${student.name}.`);
       }
       setProcessedMessages([...results]);
@@ -64,11 +76,11 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
     <Card className="bg-secondary">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <AlertTriangle className="text-primary" />
-          Notification Automation
+          <Mail className="text-primary" />
+          Email Notification Automation
         </CardTitle>
         <CardDescription>
-          Automatically send alerts to all students in the 'Warning' or 'Critical' risk zones.
+          Automatically send email alerts to all students in the 'Warning' or 'Critical' risk zones.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -77,7 +89,7 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
         </p>
         <Button onClick={handleRunAutomation} disabled={isProcessing || studentsToNotify.length === 0}>
           <BellRing className="mr-2 h-4 w-4" />
-          {isProcessing ? 'Processing...' : 'Run Automated Notifications'}
+          {isProcessing ? 'Sending Emails...' : 'Run Automated Notifications'}
         </Button>
       </CardContent>
       {processedMessages.length > 0 && (

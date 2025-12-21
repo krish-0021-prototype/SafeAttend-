@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { generateNotification } from '@/ai/flows/generate-notification';
 import { calculateRequiredLectures } from '@/lib/attendanceUtils';
+import { sendEmail } from '@/app/actions';
 
 interface StudentTableProps {
   students: Student[];
@@ -34,6 +35,8 @@ export function StudentTable({ students }: StudentTableProps) {
     try {
       const { attendedLectures, totalLectures } = student.subjects[0] || { attendedLectures: 0, totalLectures: 0 };
       const requiredLectures = calculateRequiredLectures(attendedLectures, totalLectures);
+      
+      // 1. Generate the personalized message.
       const notification = await generateNotification({
         name: student.name,
         overallAttendance: student.overallAttendance,
@@ -41,20 +44,28 @@ export function StudentTable({ students }: StudentTableProps) {
         requiredLectures,
       });
 
-      // This is a simulation. In a real app, you'd send an email/SMS here.
-      console.log(`Simulating notification for ${student.name}: ${notification.message}`);
-
-      toast({
-        title: 'Notification Sent',
-        description: `An alert has been sent to ${student.name}.`,
-        action: <CheckCircle className="text-green-500" />,
+      // 2. Send the email using the server action.
+      const emailResult = await sendEmail({
+        to: student.email,
+        subject: `Attendance Alert: ${student.riskLevel}`,
+        body: notification.message,
       });
-    } catch (error) {
+
+      if (emailResult.success) {
+        toast({
+          title: 'Email Sent',
+          description: `An alert has been sent to ${student.name}.`,
+          action: <CheckCircle className="text-green-500" />,
+        });
+      } else {
+        throw new Error(emailResult.message);
+      }
+    } catch (error: any) {
       console.error('Failed to send notification:', error);
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to send notification. Please try again.',
+        description: error.message || 'Failed to send notification. Please try again.',
       });
     } finally {
       setNotifying(null);
