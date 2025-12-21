@@ -1,17 +1,52 @@
 'use client';
 
 import type { Student } from '@/lib/types';
+import { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { AttendanceProgressBar } from './AttendanceProgressBar';
 import { cn } from '@/lib/utils';
-import { Info } from 'lucide-react';
+import { Info, BellRing, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { generateNotification } from '@/ai/flows/generate-notification';
 
 interface StudentTableProps {
   students: Student[];
 }
 
 export function StudentTable({ students }: StudentTableProps) {
+  const { toast } = useToast();
+  const [notifying, setNotifying] = useState<string | null>(null);
+
+  const handleNotify = async (student: Student) => {
+    setNotifying(student.id);
+    try {
+      const notification = await generateNotification({
+        name: student.name,
+        overallAttendance: student.overallAttendance,
+        missableLectures: student.missableLectures,
+      });
+
+      console.log('Generated Notification:', notification.message);
+
+      toast({
+        title: 'Notification Sent',
+        description: `A notification has been sent to ${student.name}.`,
+        action: <CheckCircle className="text-green-500" />,
+      });
+    } catch (error) {
+      console.error('Failed to send notification:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to send notification. Please try again.',
+      });
+    } finally {
+      setNotifying(null);
+    }
+  };
+
   const getRiskBadgeVariant = (riskLevel: Student['riskLevel']) => {
     switch (riskLevel) {
       case 'Safe':
@@ -38,6 +73,7 @@ export function StudentTable({ students }: StudentTableProps) {
               <TableHead className="font-semibold">Overall Attendance</TableHead>
               <TableHead className="font-semibold">Risk Level</TableHead>
               <TableHead className="font-semibold">Prediction</TableHead>
+              <TableHead className="text-right font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -68,11 +104,24 @@ export function StudentTable({ students }: StudentTableProps) {
                     </Badge>
                   </TableCell>
                   <TableCell>{student.missableLectures}</TableCell>
+                  <TableCell className="text-right">
+                    {student.riskLevel === 'Critical' && (
+                       <Button 
+                         variant="ghost" 
+                         size="icon"
+                         onClick={() => handleNotify(student)}
+                         disabled={notifying === student.id}
+                         aria-label={`Notify ${student.name}`}
+                       >
+                         <BellRing className="h-4 w-4" />
+                       </Button>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <Info className="h-8 w-8" />
                     <p>No students found for the selected filters.</p>
