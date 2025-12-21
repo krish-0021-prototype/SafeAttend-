@@ -56,14 +56,14 @@ const notificationPrompt = ai.definePrompt({
   Risk Level: {{riskLevel}}
   Required Lectures to reach 70%: {{requiredLectures}}
 
-  The message should be suitable for an SMS or Email. It must state their current attendance, their risk status, and a clear, calculated action to get back to the safe zone (above 70%).
+  The message should be suitable for an SMS or Email. It must state their current attendance (as a whole number), their risk status, and a clear, calculated action to get back to the safe zone (above 70%).
 
   - For 'Warning' status, the tone should be a firm reminder.
   - For 'Critical' status, the tone should be urgent and clearly state the number of lectures they MUST attend.
-  - The call to action should be to contact their academic advisor and to attend the required lectures.
+  - The call to action should be to attend the required lectures. DO NOT mention contacting an advisor.
 
-  Example for Critical: "URGENT Attendance Alert for {{name}}: Your attendance is CRITICAL at {{overallAttendance}}%. You must attend the next {{requiredLectures}} lectures to get back to the safe zone. Please contact your advisor immediately."
-  Example for Warning: "Attendance Warning for {{name}}: Your attendance is at {{overallAttendance}}%. To avoid falling into the critical zone, you must attend at least {{requiredLectures}} more lectures. Please contact your advisor."
+  Example for Critical: "URGENT Attendance Alert for {{name}}: Your attendance is CRITICAL at {{overallAttendance}}%. You must attend the next {{requiredLectures}} lectures to get back to the safe zone."
+  Example for Warning: "Attendance Warning for {{name}}: Your attendance is at {{overallAttendance}}%. To avoid falling into the critical zone, you must attend at least {{requiredLectures}} more lectures."
 
   Generate the notification message now.
   `,
@@ -76,7 +76,10 @@ const generateNotificationFlow = ai.defineFlow(
     outputSchema: GenerateNotificationOutputSchema,
   },
   async input => {
-    const {output} = await notificationPrompt(input);
+    const {output} = await notificationPrompt({
+      ...input,
+      overallAttendance: Math.floor(input.overallAttendance)
+    });
     return output!;
   }
 );
