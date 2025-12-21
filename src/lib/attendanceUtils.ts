@@ -28,19 +28,3 @@ export function calculateRequiredLectures(attended: number, total: number): numb
   }
   return 0; // Not in a critical state, no required lectures to show.
 }
-
-
-export function calculatePrediction(attended: number, total: number): number {
-    if (total === 0) return 0;
-    const currentPercentage = (attended / total) * 100;
-    const threshold = ATTENDANCE_THRESHOLD / 100; // 0.7
-  
-    if (currentPercentage < ATTENDANCE_THRESHOLD) {
-      return 0; // Can't miss any more lectures
-    }
-    
-    // How many lectures (N) can be missed?
-    // attended / (total + N) >= threshold
-    const missable = Math.floor((attended / threshold) - total);
-    return missable > 0 ? missable : 0;
-}

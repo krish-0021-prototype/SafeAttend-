@@ -23,7 +23,6 @@ const GenerateNotificationInputSchema = z.object({
     .describe(
       'A calculation of how many lectures the student must attend to reach the 70% attendance threshold.'
     ),
-  missableLectures: z.number().describe('A calculation of how many lectures the student can miss before their attendance drops below 70%.'),
 });
 export type GenerateNotificationInput = z.infer<
   typeof GenerateNotificationInputSchema
@@ -56,16 +55,15 @@ const notificationPrompt = ai.definePrompt({
   Current Attendance: {{overallAttendance}}%
   Risk Level: {{riskLevel}}
   Required Lectures to reach 70%: {{requiredLectures}}
-  Lectures they can miss before dropping below 70%: {{missableLectures}}
 
   The message should be suitable for an SMS or Email. It must state their current attendance (as a whole number), their risk status, and a clear, calculated action to improve or maintain their standing.
 
-  - For 'Warning' status, the tone should be a firm reminder. Mention how many lectures they can miss.
+  - For 'Warning' status, the tone should be a firm reminder.
   - For 'Critical' status, the tone should be urgent and clearly state the number of lectures they MUST attend to get back to the safe zone.
-  - The call to action should be to attend the required lectures or be mindful of the missable lecture count. DO NOT mention contacting an advisor.
+  - The call to action should be to attend the required lectures. DO NOT mention contacting an advisor.
 
   Example for Critical: "URGENT Attendance Alert for {{name}}: Your attendance is CRITICAL at {{overallAttendance}}%. You must attend the next {{requiredLectures}} lectures to get back to the safe zone."
-  Example for Warning: "Attendance Warning for {{name}}: Your attendance is at {{overallAttendance}}%. You can miss up to {{missableLectures}} lectures before falling into the critical zone. Please be careful."
+  Example for Warning: "Attendance Warning for {{name}}: Your attendance is at {{overallAttendance}}%. Please improve your attendance to avoid falling into the critical zone."
 
   Generate the notification message now.
   `,

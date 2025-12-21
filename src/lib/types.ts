@@ -18,11 +18,8 @@ export interface Student {
   year: Year;
   branch: Branch;
   division: Division;
-  email: string;
-  phone: string;
   subjects: Subject[];
   overallAttendance: number;
   riskLevel: RiskLevel;
-  missableLectures: number;
   aiAdvice: string;
 }
