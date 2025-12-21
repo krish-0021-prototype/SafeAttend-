@@ -41,7 +41,16 @@ export function StudentTable({ students }: StudentTableProps) {
         requiredLectures,
       });
 
-      console.log('Generated Notification:', notification.message);
+      // DEVELOPER TODO:
+      // This is where you would call your email API for a single student.
+      // You have access to the student's email and the generated message.
+      // Example:
+      // await sendEmail({
+      //   to: student.email,
+      //   subject: `Attendance Alert: ${student.riskLevel}`,
+      //   body: notification.message,
+      // });
+      // console.log(`Simulating email to ${student.email}: ${notification.message}`);
 
       toast({
         title: 'Notification Sent',

@@ -40,10 +40,22 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
           riskLevel: student.riskLevel,
           requiredLectures,
         });
-        results.push(`✔️ Sent to ${student.name}: "${result.message}"`);
+
+        // DEVELOPER TODO:
+        // This is where you would call your email API.
+        // You have access to the student's email and the generated message.
+        // Example:
+        // await sendEmail({
+        //   to: student.email,
+        //   subject: `Attendance Alert: ${student.riskLevel}`,
+        //   body: result.message,
+        // });
+        // console.log(`Simulating email to ${student.email}: ${result.message}`);
+
+        results.push(`✔️ Email for ${student.name} prepared: "${result.message}"`);
       } catch (error) {
         console.error(`Failed to notify ${student.name}:`, error);
-        results.push(`❌ Failed to send to ${student.name}.`);
+        results.push(`❌ Failed to prepare email for ${student.name}.`);
       }
       setProcessedMessages([...results]);
     }
@@ -64,7 +76,7 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
           Notification Automation
         </CardTitle>
         <CardDescription>
-          Automatically send SMS alerts to all students in the 'Warning' or 'Critical' risk zones.
+          Automatically send email alerts to all students in the 'Warning' or 'Critical' risk zones.
         </CardDescription>
       </CardHeader>
       <CardContent>

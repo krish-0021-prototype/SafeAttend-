@@ -22,4 +22,5 @@ export interface Student {
   overallAttendance: number;
   riskLevel: RiskLevel;
   aiAdvice: string;
+  email: string;
 }
