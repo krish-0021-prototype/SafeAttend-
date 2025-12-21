@@ -42,9 +42,9 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
         });
 
         // This is a simulation. In a real app, you'd send an email/SMS here.
-        console.log(`Simulating notification for ${student.name}: ${result.message}`);
+        console.log(`Simulating notification for ${student.name} (${student.email}): ${result.message}`);
 
-        results.push(`✔️ Notification for ${student.name} prepared: "${result.message}"`);
+        results.push(`✔️ Notification for ${student.name} (${student.email}) prepared: "${result.message}"`);
       } catch (error) {
         console.error(`Failed to notify ${student.name}:`, error);
         results.push(`❌ Failed to prepare notification for ${student.name}.`);

@@ -14,6 +14,7 @@ export type Division = "K" | "P" | "J" | "H";
 export interface Student {
   id: string;
   name: string;
+  email: string;
   rollNumber: string;
   year: Year;
   branch: Branch;
