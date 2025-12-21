@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { AttendanceProgressBar } from './AttendanceProgressBar';
 import { cn } from '@/lib/utils';
-import { Info, BellRing, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Info, BellRing, CheckCircle, AlertTriangle, ShieldQuestion } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { generateNotification } from '@/ai/flows/generate-notification';
@@ -39,6 +39,7 @@ export function StudentTable({ students }: StudentTableProps) {
         overallAttendance: student.overallAttendance,
         riskLevel: student.riskLevel,
         requiredLectures,
+        missableLectures: student.missableLectures,
       });
 
       console.log('Generated Notification:', notification.message);
@@ -85,6 +86,7 @@ export function StudentTable({ students }: StudentTableProps) {
               <TableHead className="font-semibold">Division</TableHead>
               <TableHead className="font-semibold">Overall Attendance</TableHead>
               <TableHead className="font-semibold">Risk Level</TableHead>
+              <TableHead className="font-semibold">Prediction</TableHead>
               <TableHead className="text-right font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -116,6 +118,12 @@ export function StudentTable({ students }: StudentTableProps) {
                       {student.riskLevel}
                     </Badge>
                   </TableCell>
+                   <TableCell>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <ShieldQuestion className="h-4 w-4" />
+                        <span>{student.missableLectures} missable</span>
+                      </div>
+                  </TableCell>
                   <TableCell className="text-right">
                     {(student.riskLevel === 'Critical' || student.riskLevel === 'Warning') && (
                        <Button 
@@ -133,7 +141,7 @@ export function StudentTable({ students }: StudentTableProps) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-24 text-center">
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
                     <Info className="h-8 w-8" />
                     <p>No students found for the selected filters.</p>

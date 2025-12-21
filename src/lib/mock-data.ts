@@ -1,4 +1,4 @@
-import { calculateRiskLevel } from '@/lib/attendanceUtils';
+import { calculateRiskLevel, calculatePrediction } from '@/lib/attendanceUtils';
 import type { Student, Branch, Division, Year } from '@/lib/types';
 
 // Data from the user's diagram, now consolidated under one branch
@@ -34,6 +34,7 @@ export async function getMockStudents(): Promise<Student[]> {
   const students: Student[] = studentsData.map((s, index) => {
     const overallAttendance = s.total > 0 ? (s.attended / s.total) * 100 : 0;
     const riskLevel = calculateRiskLevel(overallAttendance);
+    const missableLectures = calculatePrediction(s.attended, s.total);
     
     const student: Student = {
       id: (index + 1).toString(),
@@ -46,6 +47,7 @@ export async function getMockStudents(): Promise<Student[]> {
       phone: s.phone,
       overallAttendance: overallAttendance,
       riskLevel: riskLevel,
+      missableLectures: missableLectures,
       aiAdvice: `This is a static placeholder for AI-generated advice for ${s.name}.`,
       subjects: [{
         subjectName: 'Data Structures', // Example subject

@@ -23,5 +23,6 @@ export interface Student {
   subjects: Subject[];
   overallAttendance: number;
   riskLevel: RiskLevel;
+  missableLectures: number;
   aiAdvice: string;
 }

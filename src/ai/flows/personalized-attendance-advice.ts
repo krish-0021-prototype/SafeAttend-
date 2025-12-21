@@ -24,6 +24,7 @@ const PersonalizedAttendanceAdviceInputSchema = z.object({
     .describe(
       'The risk level of the student (Safe, Warning, or Critical) based on their attendance.'
     ),
+    missableLectures: z.number().describe('A calculation of how many lectures the student can miss before their attendance drops below 70%.'),
 });
 export type PersonalizedAttendanceAdviceInput = z.infer<
   typeof PersonalizedAttendanceAdviceInputSchema
@@ -51,10 +52,14 @@ const personalizedAttendanceAdvicePrompt = ai.definePrompt({
   Student Name: {{name}}
   Overall Attendance: {{overallAttendance}}%
   Risk Level: {{riskLevel}}
+  Lectures Student Can Miss: {{missableLectures}}
 
-  Provide personalized advice to the student, addressing their current risk level and suggesting actions to improve their attendance. Tailor the advice based on whether they are in the Safe, Warning, or Critical zone. If they are in a good position encourage them.
-  If they are in danger, provide actionable advice.
-  Example for Safe: "Great job, {{name}}! Your attendance is in the Safe zone. Keep up the good work!"
+  Provide personalized advice to the student, addressing their current risk level and suggesting actions to improve their attendance. Tailor the advice based on whether they are in the Safe, Warning, or Critical zone. 
+  
+  - If they are in a 'Safe' or 'Warning' position, encourage them and mention how many lectures they can afford to miss.
+  - If they are in a 'Critical' position, provide urgent, actionable advice on how to get back to a safe standing.
+  
+  Example for Safe: "Great job, {{name}}! Your attendance is in the Safe zone. You have a buffer of {{missableLectures}} lectures. Keep up the good work!"
   Example for Critical: "Alert, {{name}}! Your attendance is in the Critical zone. You need to attend all upcoming lectures to avoid serious academic consequences. Please speak with your advisor immediately to create a plan."
   Remember to be encouraging and supportive. Format the output as a single paragraph.
   `, 

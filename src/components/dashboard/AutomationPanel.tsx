@@ -39,6 +39,7 @@ export function AutomationPanel({ studentsToNotify }: AutomationPanelProps) {
           overallAttendance: student.overallAttendance,
           riskLevel: student.riskLevel,
           requiredLectures,
+          missableLectures: student.missableLectures,
         });
         results.push(`✔️ Sent to ${student.name}: "${result.message}"`);
       } catch (error) {
