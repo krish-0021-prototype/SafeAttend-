@@ -21,7 +21,7 @@ const GenerateNotificationInputSchema = z.object({
   missableLectures: z
     .string()
     .describe(
-      'The prediction of how many lectures the student can miss or must attend.'
+      'A calculation of how many lectures the student must attend to reach the 70% attendance threshold.'
     ),
 });
 export type GenerateNotificationInput = z.infer<
@@ -49,22 +49,23 @@ const notificationPrompt = ai.definePrompt({
   name: 'notificationPrompt',
   input: {schema: GenerateNotificationInputSchema},
   output: {schema: GenerateNotificationOutputSchema},
-  prompt: `You are an automated attendance alert system. Generate a concise and clear SMS notification for a student.
+  prompt: `You are an automated attendance alert system. Generate a concise and clear SMS notification for a student based on their attendance data.
 
   Student Name: {{name}}
-  Overall Attendance: {{overallAttendance}}%
+  Current Attendance: {{overallAttendance}}%
   Risk Level: {{riskLevel}}
-  Prediction: {{missableLectures}}
+  Required Action: {{missableLectures}}
 
-  The message should be suitable for SMS. It must state their attendance, risk status, and a clear call to action.
+  The message should be suitable for an SMS or Email. It must state their current attendance, their risk status, and a clear, calculated action to get back to the safe zone (above 70%).
+
   - For 'Warning' status, the tone should be a firm reminder.
-  - For 'Critical' status, the tone should be urgent.
-  - The call to action should be to contact their academic advisor.
+  - For 'Critical' status, the tone should be urgent and clearly state the number of lectures they MUST attend.
+  - The call to action should be to contact their academic advisor and to attend the required lectures.
 
-  Example for Critical: "URGENT Attendance Alert for {{name}}: You are at {{overallAttendance}}% (Critical). {{missableLectures}}. Please contact your advisor immediately."
-  Example for Warning: "Attendance Warning for {{name}}: Your attendance is {{overallAttendance}}%. {{missableLectures}}. Please contact your advisor to discuss."
+  Example for Critical: "URGENT Attendance Alert for {{name}}: Your attendance is CRITICAL at {{overallAttendance}}%. You must attend the next {{missableLectures}} to get back to the safe zone. Please contact your advisor immediately."
+  Example for Warning: "Attendance Warning for {{name}}: Your attendance is at {{overallAttendance}}%. To avoid falling into the critical zone, you {{missableLectures}}. Please contact your advisor."
 
-  Generate the notification message.
+  Generate the notification message now.
   `,
 });
 
