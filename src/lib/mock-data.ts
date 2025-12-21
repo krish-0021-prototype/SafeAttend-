@@ -5,28 +5,28 @@ import type { Student, Branch, Division, Year } from '@/lib/types';
 const studentsData: { name: string; division: Division, branch: Branch, year: Year, attended: number, total: number }[] = [
   // Division K - Automation & Robotics
   { name: 'Aditya', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 85, total: 95 },
-  { name: 'Prachi', division: 'K', branch: 'Automation & Robotics', year: 2, attended: 90, total: 100 },
-  { name: 'Atul', division: 'K', branch: 'Automation & Robotics', year: 3, attended: 72, total: 90 },
-  { name: 'Gauri', division: 'K', branch: 'Automation & Robotics', year: 4, attended: 65, total: 100 },
+  { name: 'Prachi', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 90, total: 100 },
+  { name: 'Atul', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 72, total: 90 },
+  { name: 'Gauri', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 65, total: 100 },
   { name: 'Purva', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 88, total: 92 },
 
   // Division P - Automation & Robotics
-  { name: 'Kanishk', division: 'P', branch: 'Automation & Robotics', year: 2, attended: 81, total: 98 },
-  { name: 'OM', division: 'P', branch: 'Automation & Robotics', year: 3, attended: 75, total: 85 },
-  { name: 'Yogesh', division: 'P', branch: 'Automation & Robotics', year: 4, attended: 95, total: 100 },
+  { name: 'Kanishk', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 81, total: 98 },
+  { name: 'OM', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 75, total: 85 },
+  { name: 'Yogesh', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 95, total: 100 },
   { name: 'Kunal', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 68, total: 95 },
-  { name: 'Srushti', division: 'P', branch: 'Automation & Robotics', year: 2, attended: 89, total: 90 },
+  { name: 'Srushti', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 89, total: 90 },
 
   // Division J - AI/ML
   { name: 'Riya', division: 'J', branch: 'AI/ML', year: 1, attended: 92, total: 94 },
-  { name: 'Maheey', division: 'J', branch: 'AI/ML', year: 2, attended: 78, total: 88 },
-  { name: 'Shravni', division: 'J', branch: 'AI/ML', year: 3, attended: 83, total: 99 },
-  { name: 'Shatakshi', division: 'J', branch: 'AI/ML', year: 4, attended: 60, total: 90 },
+  { name: 'Maheey', division: 'J', branch: 'AI/ML', year: 1, attended: 78, total: 88 },
+  { name: 'Shravni', division: 'J', branch: 'AI/ML', year: 1, attended: 83, total: 99 },
+  { name: 'Shatakshi', division: 'J', branch: 'AI/ML', year: 1, attended: 60, total: 90 },
 
   // Division H - ENTC
   { name: 'Shreya', division: 'H', branch: 'ENTC', year: 1, attended: 45, total: 100 },
-  { name: 'Soham', division: 'H', branch: 'ENTC', year: 2, attended: 80, total: 85 },
-  { name: 'Ronit', division: 'H', branch: 'ENTC', year: 3, attended: 71, total: 100 },
+  { name: 'Soham', division: 'H', branch: 'ENTC', year: 1, attended: 80, total: 85 },
+  { name: 'Ronit', division: 'H', branch: 'ENTC', year: 1, attended: 71, total: 100 },
 ];
 
 
