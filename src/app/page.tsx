@@ -4,8 +4,9 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card } from '@/components/ui/card';
 import { StudentFilters } from '@/components/dashboard/StudentFilters';
-import type { Branch, Division, Year } from '@/lib/types';
+import type { Branch, Division, Year, Student } from '@/lib/types';
 import { Logo } from '@/components/dashboard/Logo';
+import { AutomationPanel } from '@/components/dashboard/AutomationPanel';
 
 
 export default async function Home({
@@ -30,12 +31,18 @@ export default async function Home({
     return searchMatch && yearMatch && branchMatch && divisionMatch;
   });
 
+  const studentsToNotify = allStudents.filter(s => s.riskLevel === 'Critical' || s.riskLevel === 'Warning');
+
   return (
     <div className="min-h-screen bg-background font-body text-foreground">
       <main className="container mx-auto p-4 md:p-8">
         <header className="flex items-center justify-between mb-8">
           <Logo />
         </header>
+        
+        <section className="mb-8">
+          <AutomationPanel studentsToNotify={studentsToNotify} />
+        </section>
 
         <section className="mb-8">
             <StudentFilters 

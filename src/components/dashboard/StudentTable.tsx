@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { AttendanceProgressBar } from './AttendanceProgressBar';
 import { cn } from '@/lib/utils';
-import { Info, BellRing, CheckCircle } from 'lucide-react';
+import { Info, BellRing, CheckCircle, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { generateNotification } from '@/ai/flows/generate-notification';
@@ -20,11 +20,21 @@ export function StudentTable({ students }: StudentTableProps) {
   const [notifying, setNotifying] = useState<string | null>(null);
 
   const handleNotify = async (student: Student) => {
+    if (student.riskLevel !== 'Critical' && student.riskLevel !== 'Warning') {
+        toast({
+            variant: 'default',
+            title: 'Not Required',
+            description: `${student.name} is in the Safe zone.`,
+        });
+        return;
+    }
+
     setNotifying(student.id);
     try {
       const notification = await generateNotification({
         name: student.name,
         overallAttendance: student.overallAttendance,
+        riskLevel: student.riskLevel,
         missableLectures: student.missableLectures,
       });
 
@@ -32,7 +42,7 @@ export function StudentTable({ students }: StudentTableProps) {
 
       toast({
         title: 'Notification Sent',
-        description: `A notification has been sent to ${student.name}.`,
+        description: `An alert has been sent to ${student.name}.`,
         action: <CheckCircle className="text-green-500" />,
       });
     } catch (error) {
@@ -100,12 +110,13 @@ export function StudentTable({ students }: StudentTableProps) {
                   <TableCell>
                     <Badge variant={getRiskBadgeVariant(student.riskLevel)} 
                            className={cn({'bg-accent text-accent-foreground hover:bg-accent/80': student.riskLevel === 'Safe', 'bg-primary text-primary-foreground hover:bg-primary/80': student.riskLevel === 'Warning'})}>
+                      {student.riskLevel === 'Warning' && <AlertTriangle className="mr-1 h-3 w-3" />}
                       {student.riskLevel}
                     </Badge>
                   </TableCell>
                   <TableCell>{student.missableLectures}</TableCell>
                   <TableCell className="text-right">
-                    {student.riskLevel === 'Critical' && (
+                    {(student.riskLevel === 'Critical' || student.riskLevel === 'Warning') && (
                        <Button 
                          variant="ghost" 
                          size="icon"
