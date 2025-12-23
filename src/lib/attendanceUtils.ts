@@ -14,17 +14,39 @@ export function calculateRiskLevel(attendance: number): RiskLevel {
   return "Safe";
 }
 
+/**
+ * Calculates how many consecutive lectures a student must attend to reach the 70% threshold.
+ * Only applies to students currently below 70%.
+ * @param attended - Number of lectures attended.
+ * @param total - Total lectures so far.
+ * @returns The number of lectures required.
+ */
 export function calculateRequiredLectures(attended: number, total: number): number {
-  if (total === 0) return 0;
-  
-  const currentPercentage = (attended / total) * 100;
   const threshold = ATTENDANCE_THRESHOLD / 100; // 0.7
-
-  if (currentPercentage < ATTENDANCE_THRESHOLD) {
-    // Must attend N lectures to reach the threshold
-    // (attended + N) / (total + N) >= threshold
-    const needed = Math.ceil((threshold * total - attended) / (1 - threshold));
-    return needed > 0 ? needed : 0;
+  if (total === 0 || (attended / total) >= threshold) {
+    return 0;
   }
-  return 0; // Not in a critical state, no required lectures to show.
+  // Formula: (attended + N) / (total + N) = threshold
+  // Solved for N: N = (threshold * total - attended) / (1 - threshold)
+  const needed = Math.ceil((threshold * total - attended) / (1 - threshold));
+  return needed > 0 ? needed : 0;
+}
+
+
+/**
+ * Calculates how many consecutive lectures a student can miss before dropping below the 70% threshold.
+ * Only applies to students currently at or above 70%.
+ * @param attended - Number of lectures attended.
+ * @param total - Total lectures so far.
+ * @returns The number of lectures that can be skipped.
+ */
+export function calculateSkippableLectures(attended: number, total: number): number {
+    const threshold = ATTENDANCE_THRESHOLD / 100; // 0.7
+    if (total === 0 || (attended / total) < threshold) {
+        return 0;
+    }
+    // Formula: attended / (total + M) = threshold
+    // Solved for M: M = (attended / threshold) - total
+    const skippable = Math.floor((attended / threshold) - total);
+    return skippable > 0 ? skippable : 0;
 }

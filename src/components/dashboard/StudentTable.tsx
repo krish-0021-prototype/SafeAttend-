@@ -10,8 +10,9 @@ import { Info, BellRing, CheckCircle, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { generateNotification } from '@/ai/flows/generate-notification';
-import { calculateRequiredLectures } from '@/lib/attendanceUtils';
+import { calculateRequiredLectures, calculateSkippableLectures } from '@/lib/attendanceUtils';
 import { sendEmail } from '@/app/actions';
+import { StudentDetailsDialog } from './StudentDetailsDialog';
 
 interface StudentTableProps {
   students: Student[];
@@ -20,6 +21,7 @@ interface StudentTableProps {
 export function StudentTable({ students }: StudentTableProps) {
   const { toast } = useToast();
   const [notifying, setNotifying] = useState<string | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   const handleNotify = async (student: Student) => {
     if (student.riskLevel !== 'Critical' && student.riskLevel !== 'Warning') {
@@ -36,7 +38,6 @@ export function StudentTable({ students }: StudentTableProps) {
       const { attendedLectures, totalLectures } = student.subjects[0] || { attendedLectures: 0, totalLectures: 0 };
       const requiredLectures = calculateRequiredLectures(attendedLectures, totalLectures);
       
-      // 1. Generate the personalized message.
       const notification = await generateNotification({
         name: student.name,
         overallAttendance: student.overallAttendance,
@@ -44,7 +45,6 @@ export function StudentTable({ students }: StudentTableProps) {
         requiredLectures,
       });
 
-      // 2. Send the email using the server action.
       const emailResult = await sendEmail({
         to: student.email,
         subject: `Attendance Alert: ${student.riskLevel}`,
@@ -103,7 +103,12 @@ export function StudentTable({ students }: StudentTableProps) {
           <TableBody>
             {students.length > 0 ? (
               students.map((student) => (
-                <TableRow key={student.id} data-testid={`student-row-${student.id}`}>
+                <TableRow 
+                  key={student.id} 
+                  data-testid={`student-row-${student.id}`}
+                  onClick={() => setSelectedStudent(student)}
+                  className="cursor-pointer"
+                >
                   <TableCell className="font-medium">{student.name}</TableCell>
                   <TableCell>{student.year}</TableCell>
                   <TableCell>{student.branch}</TableCell>
@@ -129,17 +134,27 @@ export function StudentTable({ students }: StudentTableProps) {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    {(student.riskLevel === 'Critical' || student.riskLevel === 'Warning') && (
-                       <Button 
-                         variant="ghost" 
-                         size="icon"
-                         onClick={() => handleNotify(student)}
-                         disabled={notifying === student.id}
-                         aria-label={`Notify ${student.name}`}
-                       >
-                         <BellRing className="h-4 w-4" />
-                       </Button>
-                    )}
+                    <div className="flex items-center justify-end gap-2">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => { e.stopPropagation(); setSelectedStudent(student); }}
+                            aria-label={`View details for ${student.name}`}
+                        >
+                            <Info className="h-4 w-4" />
+                        </Button>
+                        {(student.riskLevel === 'Critical' || student.riskLevel === 'Warning') && (
+                        <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={(e) => { e.stopPropagation(); handleNotify(student); }}
+                            disabled={notifying === student.id}
+                            aria-label={`Notify ${student.name}`}
+                        >
+                            <BellRing className="h-4 w-4" />
+                        </Button>
+                        )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
@@ -156,6 +171,11 @@ export function StudentTable({ students }: StudentTableProps) {
           </TableBody>
         </Table>
       </div>
+      <StudentDetailsDialog 
+        student={selectedStudent} 
+        open={!!selectedStudent} 
+        onOpenChange={(isOpen) => !isOpen && setSelectedStudent(null)} 
+      />
     </>
   );
 }
