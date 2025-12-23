@@ -1,7 +1,7 @@
 import type { RiskLevel } from '@/lib/types';
 
 const ATTENDANCE_THRESHOLD = 70;
-const SAFE_THRESHOLD = 80;
+const SAFE_THRESHOLD = 75;
 const LECTURES_PER_DAY = 5;
 
 export function calculateRiskLevel(attendance: number): RiskLevel {
