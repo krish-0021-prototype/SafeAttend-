@@ -4,29 +4,29 @@ import type { Student, Branch, Division, Year } from '@/lib/types';
 // Data from the user's diagram, now consolidated under one branch
 const studentsData: { name: string; email: string; division: Division, branch: Branch, year: Year, attended: number, total: number }[] = [
   // Division K - Automation & Robotics
-  { name: 'Aditya', email: 'aditya@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 85, total: 95 },
-  { name: 'Prachi', email: 'prachi@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 90, total: 100 },
-  { name: 'Atul', email: 'atul@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 72, total: 90 },
-  { name: 'Gauri', email: 'gauri@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 65, total: 100 },
-  { name: 'Purva', email: 'purva@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 88, total: 92 },
+  { name: 'Aditya', email: 'aditya@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 85, total: 100 }, // 85%
+  { name: 'Prachi', email: 'prachi@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 90, total: 100 }, // 90%
+  { name: 'Atul', email: 'atul@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 72, total: 100 }, // 72%
+  { name: 'Gauri', email: 'gauri@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 75, total: 100 }, // 75%
+  { name: 'Purva', email: 'purva@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 88, total: 100 }, // 88%
 
   // Division P - Automation & Robotics
-  { name: 'Kanishk', email: 'kanishk@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 81, total: 98 },
-  { name: 'OM', email: 'om@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 75, total: 85 },
-  { name: 'Yogesh', email: 'yogesh@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 95, total: 100 },
-  { name: 'Kunal', email: 'kunal@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 68, total: 95 },
-  { name: 'Srushti', email: 'srushti@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 89, total: 90 },
+  { name: 'Kanishk', email: 'kanishk@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 59, total: 100 }, // 59%
+  { name: 'OM', email: 'om@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 75, total: 100 }, // 75%
+  { name: 'Yogesh', email: 'yogesh@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 95, total: 100 }, // 95%
+  { name: 'Kunal', email: 'kunal@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 78, total: 100 }, // 78%
+  { name: 'Srushti', email: 'srushti@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 89, total: 100 }, // 89%
 
   // Division J - AI/ML
-  { name: 'Riya', email: 'riya@example.com', division: 'J', branch: 'AI/ML', year: 1, attended: 92, total: 94 },
-  { name: 'Maheey', email: 'maheey@example.com', division: 'J', branch: 'AI/ML', year: 1, attended: 78, total: 88 },
-  { name: 'Shravni', email: 'shravni@example.com', division: 'J', branch: 'AI/ML', year: 1, attended: 83, total: 99 },
-  { name: 'Shatakshi', email: 'shatakshi@example.com', division: 'J', branch: 'AI/ML', year: 1, attended: 60, total: 90 },
+  { name: 'Riya', email: 'riya@example.com', division: 'J', branch: 'AI/ML', year: 1, attended: 92, total: 100 }, // 92%
+  { name: 'Maheey', email: 'maheey@example.com', division: 'J', branch: 'AI/ML', year: 1, attended: 78, total: 100 }, // 78%
+  { name: 'Shravni', email: 'shravni@example.com', division: 'J', branch: 'AI/ML', year: 1, attended: 83, total: 100 }, // 83%
+  { name: 'Shatakshi', email: 'shatakshi@example.com', division: 'J', branch: 'AI/ML', year: 1, attended: 80, total: 100 }, // 80%
 
   // Division H - ENTC
-  { name: 'Shreya', email: 'shreya@example.com', division: 'H', branch: 'ENTC', year: 1, attended: 45, total: 100 },
-  { name: 'Soham', email: 'soham@example.com', division: 'H', branch: 'ENTC', year: 1, attended: 80, total: 85 },
-  { name: 'Ronit', email: 'ronit@example.com', division: 'H', branch: 'ENTC', year: 1, attended: 71, total: 100 },
+  { name: 'Shreya', email: 'shreya@example.com', division: 'H', branch: 'ENTC', year: 1, attended: 85, total: 100 }, // 85%
+  { name: 'Soham', email: 'soham@example.com', division: 'H', branch: 'ENTC', year: 1, attended: 80, total: 100 }, // 80%
+  { name: 'Ronit', email: 'ronit@example.com', division: 'H', branch: 'ENTC', year: 1, attended: 71, total: 100 }, // 71%
 ];
 
 
