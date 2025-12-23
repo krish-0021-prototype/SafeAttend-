@@ -6,11 +6,6 @@ import { Resend } from 'resend';
 // for example, in other Server Actions or Route Handlers.
 // Never expose this to the client-side.
 
-// Initialize Resend with the API key from environment variables.
-// The exclamation mark tells TypeScript that we are sure this value exists.
-const resend = new Resend(process.env.RESEND_API_KEY!);
-const fromEmail = process.env.FROM_EMAIL!;
-
 interface SendEmailParams {
   to: string;
   subject: string;
@@ -32,6 +27,10 @@ export async function sendEmail({ to, subject, body }: SendEmailParams): Promise
       message: 'Server is not configured for sending emails. Missing API key or from address.',
     };
   }
+
+  // Initialize Resend with the API key from environment variables inside the function.
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const fromEmail = process.env.FROM_EMAIL;
 
   try {
     // The core API call to Resend to send the email.
