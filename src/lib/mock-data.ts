@@ -11,7 +11,7 @@ const studentsData: { name: string; email: string; division: Division, branch: B
   { name: 'Purva', email: 'purva@example.com', division: 'K', branch: 'Automation & Robotics', year: 1, attended: 88, total: 100 }, // 88%
 
   // Division P - Automation & Robotics
-  { name: 'Kanishk', email: 'krishwebsite2000@gmail.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 59, total: 100 }, // 59%
+  { name: 'Kanishk', email: 'kanishkwankhede2122@gmail.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 59, total: 100 }, // 59%
   { name: 'OM', email: 'om@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 75, total: 100 }, // 75%
   { name: 'Yogesh', email: 'yogesh@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 95, total: 100 }, // 95%
   { name: 'Kunal', email: 'kunal@example.com', division: 'P', branch: 'Automation & Robotics', year: 1, attended: 78, total: 100 }, // 78%
